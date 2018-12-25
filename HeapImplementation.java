@@ -7,33 +7,31 @@ import java.util.Random;
 
 public class HeapImplementation {
 	
-	//static HashMap<Integer,Integer> checkA = new HashMap<>();
-	
 	//Function for the asking the users input page 
 	public static int choosePage()
 	{
 		System.out.print("Choose page you want to change = ");
-    	Scanner input = new Scanner(System.in);
-    	int inputPage = input.nextInt();
-    	return inputPage;
+    		Scanner input = new Scanner(System.in);
+    		int inputPage = input.nextInt();
+    		return inputPage;
 	}
 	
 	//Function for the asking the users input score
 	public static int inputScore()
 	{
 		Scanner input = new Scanner(System.in);
-    	System.out.print("What score you want to input = ");
-    	int inputScore = input.nextInt();
-    	return inputScore;
+    		System.out.print("What score you want to input = ");
+    		int inputScore = input.nextInt();
+    		return inputScore;
 	}
 	
 	//Function for copy array
 	public static void copyArray(int A[], int B[])
 	{
 		for(int i=0;i<A.length;i++)
-    	{
-    		A[i]=B[i];
-    	}
+    		{
+    			A[i]=B[i];
+    		}
 	}
 	
 	//Function for swap number
@@ -48,12 +46,12 @@ public class HeapImplementation {
 	public static void printArray(int A[])
 	{
 		for(int i=0;i<A.length;i++)
-    	{
-    		System.out.println("Page "+ (i+1) + ": " + A[i]);
-    	}
+    		{
+    			System.out.println("Page "+ (i+1) + ": " + A[i]);
+    		}
 	}
 	
-	//Function for printing the random number
+	//Function for assign a random number
 	public static int randomNumber()
 	{
 		Random rand = new Random();
@@ -62,84 +60,85 @@ public class HeapImplementation {
 	}
 	
 	//Function for getting the answer from the user
-	public static void getAnswer
-	(int menu, HashMap<Integer,Integer> saveHashMap, Queue<Integer> saveQueue, 
+	public static void getAnswer(int menu, HashMap<Integer,Integer> saveHashMap, Queue<Integer> saveQueue, 
 	int[] frequencyScore, int[] timeScore, int[] numberScore, int[] paidScore, int[]totalScore)
 	{
 		//Get the page and the score
 		int inputPage = choosePage();
-    	int inputScore = inputScore();
+    		int inputScore = inputScore();
     	
-    	int total = 0;
-    	inputPage = inputPage - 1;
+    		int total = 0;
+    		inputPage = inputPage - 1;
     	
-    	//copy the real score array to the copy array
+    		//Make arrays based on the four factor 
    		int[] frequencyScoreCopy = new int[30];
-    	int[] timeScoreCopy = new int[30];
-    	int[] numberScoreCopy = new int[30];
-    	int[] paidScoreCopy = new int[30];
-    	copyArray(frequencyScoreCopy,frequencyScore );
+    		int[] timeScoreCopy = new int[30];
+    		int[] numberScoreCopy = new int[30];
+    		int[] paidScoreCopy = new int[30];
+		
+		//copy the actual array to the copy array
+    		copyArray(frequencyScoreCopy,frequencyScore );
 		copyArray(timeScoreCopy, timeScore);
 		copyArray(numberScoreCopy,numberScoreCopy);
 		copyArray(paidScoreCopy, numberScoreCopy);
     	
-		//Will change the score depends on the users input
-    	for(int i=0;i<30;i++)
-       	{
-    		if(i==inputPage && menu == 1) {
-    			frequencyScore[i] = inputScore;
-    			HeapIncreaseKey(frequencyScoreCopy,inputPage,inputScore);
-    			
-    		}
-    		else if (i == inputPage && menu == 2){
-    			timeScore[i] = inputScore;
-        		HeapIncreaseKey(timeScoreCopy,inputPage,inputScore);
-    		}
-    		else if(i == inputPage && menu == 3) {
-    			numberScore[i] = inputScore;
-        		HeapIncreaseKey(numberScoreCopy,inputPage,inputScore);
-    		}
-    		else if(i == inputPage && menu == 4) {
-    			paidScore[i] = inputScore;
-        		HeapIncreaseKey(paidScoreCopy,inputPage,inputScore);
-    		}
+		//Change the score depends on the users input and using the heap increase key
+    		for(int i=0;i<30;i++)
+       		{
+    			if(i==inputPage && menu == 1) {
+    				frequencyScore[i] = inputScore;
+    				HeapIncreaseKey(frequencyScoreCopy,inputPage,inputScore);
+    			}
+    			else if (i == inputPage && menu == 2){
+    				timeScore[i] = inputScore;
+        			HeapIncreaseKey(timeScoreCopy,inputPage,inputScore);
+    			}
+    			else if(i == inputPage && menu == 3) {
+    				numberScore[i] = inputScore;
+        			HeapIncreaseKey(numberScoreCopy,inputPage,inputScore);
+    			}
+    			else if(i == inputPage && menu == 4) {
+    				paidScore[i] = inputScore;
+        			HeapIncreaseKey(paidScoreCopy,inputPage,inputScore);
+    			}
 
-    		//Will put the total score into the array	
-    		total = frequencyScore[i] + timeScore[i] + numberScore[i] + paidScore[i];
-       		totalScore[i] = total;
-       		
-       		saveHashMap.put(total, i);
+    			//Will put the total score into the array	
+    			total = frequencyScore[i] + timeScore[i] + numberScore[i] + paidScore[i];
+       			totalScore[i] = total;
+       			
+			//Using hashmap to save the total score and the index
+       			saveHashMap.put(total, i);
     		
-    		//Put the total into the queue
-    		saveQueue.add(total);
-        	saveHashMap.remove(total);
+			//Put the total into the queue
+			saveQueue.add(total);
+			saveHashMap.remove(total);
     		
-    		//Using hashmap to get the page and the score
-        	int page = i + 1;
-    		saveHashMap.put(total,page);
-    	}
+			//Using hashmap to get the page and the score
+			int page = i + 1;
+			saveHashMap.put(total,page);
+    		}
 	}
 	
-	//Function for getting the top 10 URLs
+	//Function to get the top 10 URLs
 	public static void getTop(Queue<Integer> saveQueue, HashMap<Integer,Integer> saveHashMap )
 	{
 		System.out.println("The Top 10 Page: ");
-       	//int countF = 0;
-       	int countS = 0;
-       	boolean checkO = true;
-       	while(checkO)
-       	{
-       		//remove the top queue
-       		int scoreMax = saveQueue.remove();
-       		
-       		//Get the page by using hashmap and get the score
-    		System.out.println("Score page " + (saveHashMap.get(scoreMax)) + ": " +  scoreMax);
-    		//countF++;		        		
-    		countS ++;
-    		//If already get the top 10, stop the loop
-        	if(countS==10)
-        		checkO = false;
-        }
+
+		int countS = 0;
+		boolean checkO = true;
+		while(checkO)
+		{
+			//remove the top queue
+			int scoreMax = saveQueue.remove();
+
+			//Get the page by using hashmap and get the score
+			System.out.println("Score page " + (saveHashMap.get(scoreMax)) + ": " +  scoreMax);
+			countS ++;
+			
+			//If already get the top 10, stop the loop
+			if(countS==10)
+				checkO = false;
+		}
 	}
 	
 	static int heap_size;
@@ -263,7 +262,6 @@ public class HeapImplementation {
 		//Declaration of hashmap that we are going to use
 		HashMap<Integer,Integer> totalScoreHash = new HashMap<Integer,Integer>();
 		HashMap<Integer,Integer> manipulationScore = new HashMap<Integer,Integer>();
-		//HashMap<Integer,Integer> newTotalScoreHash = new HashMap<Integer,Integer>();
 		
 		//Declaration of array that we are going to use
 		int[] frequencyScore = new int[30];
@@ -272,23 +270,24 @@ public class HeapImplementation {
 		int[] paidScore = new int[30];
 		int[] totalScore = new int[30];
 		
-		
 		//Reading file for website.txt
 		String token1 = "";
 
-    	// create Scanner inFile1
-    	Scanner inFile1 = new Scanner(new File("website.txt"));
+		//Create Scanner inFile1
+		//If you want to use another file, you can change the "website.txt"
+		Scanner inFile1 = new Scanner(new File("website.txt"));
 
-    	List<String> temps = new ArrayList<String>();
+		List<String> temps = new ArrayList<String>();
 
-    	//Get the 30 URLs from the website txt
-    	while (inFile1.hasNext()) {
-      	// find next line
-    		token1 = inFile1.next();
-    		temps.add(token1);
-    	}
-    	
-    	inFile1.close();
+		//Get the 30 URLs from the website txt
+		while (inFile1.hasNext()) {
+		// find next line
+			token1 = inFile1.next();
+			temps.add(token1);
+		}
+
+		inFile1.close();
+		
     	//Move the list into the array
     	String[] tempsArray = temps.toArray(new String[0]);
     	
@@ -297,7 +296,8 @@ public class HeapImplementation {
     	{
     		System.out.println("Page "+ (i+1) + ": " + tempsArray[i]);
     	}
-		
+	
+	//Declaring the priority queue that we are going to use
     	PriorityQueue<Integer> maxPQ = new PriorityQueue<Integer>(Collections.reverseOrder());
     	PriorityQueue<Integer> test = new PriorityQueue<Integer>(Collections.reverseOrder());
 
@@ -329,7 +329,7 @@ public class HeapImplementation {
     		totalScore[i] = total;
     		totalScoreHash.put(total,numberPage);
     		numberPage++;
-    		//maxPQ.add(total);  
+    		
     	}
     	
     	//Print the score
@@ -374,12 +374,12 @@ public class HeapImplementation {
     	
     	
     	//Extract the max, then output
-		for(int i=0;i<newArr.length-1;i++)
-		{
-			test.add(HeapExtractMax(testArr));
-		}
+	for(int i=0;i<newArr.length-1;i++)
+	{
+		test.add(HeapExtractMax(testArr));
+	}
     	System.out.print("\n");
-   		getTop(test,totalScoreHash);
+   	getTop(test,totalScoreHash);
     	
     	//Get the users input
     	boolean testWhile = true;
